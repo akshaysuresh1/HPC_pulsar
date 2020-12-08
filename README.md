@@ -12,7 +12,7 @@ The above packages have several underlying dependencies that are listed in their
 1. ```batch_HPC```: Batch scripts for non-interactive execution via Slurm.
 2. ```cmd_files```: Command line calls invoked by batch scripts for non-interactive program run.
 3. ```config```: Configuration script of inputs to different modules.
-4. ```exec```: Executable scripts that perform the computation. NOTE: Do not tamper with these scripts.
+4. ```executables```: Executable scripts that perform the computation. NOTE: Do not tamper with these scripts.
 
 ## Installation
 1. Clone this repository to your local machine.
