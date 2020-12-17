@@ -110,7 +110,6 @@ def collate_npz(hdr, hotpotato, logger, remove_npz=True):
     hdr.primary['nchans'] = len(freqs_GHz)
     hdr.primary['nifs'] = 1
     hdr.primary['tsamp'] = time_array[1] - time_array[0]
-    hdr.primary['rawdatafile'] = hotpotato['fil_file']
     hdr.primary['nbits'] = 32
     # Construct a Waterfall object that will be written to disk as a filterbank file.
     filename_out = hotpotato['OUTPUT_DIR']+'/'+hotpotato['basename']+'_dsamp.fil'
@@ -328,7 +327,7 @@ def main():
 
     if len(sys.argv)==1:
         parser.print_help()
-        sys.exit(1)    
+        sys.exit(1)
 
     # Run MPI-parallelized prepsubband.
     __MPI_MAIN__(parser)
