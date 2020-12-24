@@ -59,7 +59,6 @@ def myexecute(hotpotato, times_chunk, tstart, tstop, freqs_GHz, npol, nchans, ch
     if hotpotato['remove_zerodm']:
         data = remove_additive_time_noise(data)[0]
         logger.info('RANK %d: Zerodm removal completed.'% (rank))
-    data = np.zeros((len(freqs_GHz), len(times_chunk)))
     # Apply rfifind mask on data.
     boolean_rfimask = np.zeros(data.shape,dtype=bool)
     for i in range(nint_chunk):
@@ -180,7 +179,6 @@ def divide_timechunks(nproc, nblocks, times, nint, int_times, mask_zap_chans_per
         equal_divide_size =  np.round((len(times)-DMcurv_samples)/nblocks).astype(int) # Divide the time axis into nblocks chunks.
     # Increase chunk size, if required, to make it exactly divisible by the temporal downsampling factor.
     chunk_size = equal_divide_size + downsample_time_factor - (equal_divide_size % downsample_time_factor) # Chunks of the dedispersed time axis
-    N_chunks = np.ceil(len(times)/chunk_size).astype(int) # No. of chunks required
     # Calculate time edges of each chunk.
     tstart = 0
     tstop = chunk_size + DMcurv_samples
@@ -210,16 +208,19 @@ def divide_timechunks(nproc, nblocks, times, nint, int_times, mask_zap_chans_per
     print('Sectioning of time axis into disjoint chunks is complete.')
     # Cast arrays to shape (nproc-1, nblocks).
     if nproc>1:
-        tstart_values = tstart_values.reshape((nproc-1, nblocks))
-        tstop_values = tstop_values.reshape((nproc-1, nblocks))
-        nint_values = nint_values.reshape((nproc-1, nblocks))
-        tmp_int = []
+        tmp_tstart = []
+        tmp_tstop = []
+        tmp_nint = []
+        tmp_int_times = []
         tmp_zapchans = []
         for i in range(nproc-1):
-            tmp_int.append(int_times_values[i*nblocks:(i+1)*nblocks])
+            tmp_tstart.append(tstart_values[i*nblocks:(i+1)*nblocks])
+            tmp_tstop.append(tstop_values[i*nblocks:(i+1)*nblocks])
+            tmp_nint.append(nint_values[i*nblocks:(i+1)*nblocks])
+            tmp_int_times.append(int_times_values[i*nblocks:(i+1)*nblocks])
             tmp_zapchans.append(mask_zap_chans_per_int_values[i*nblocks:(i+1)*nblocks])
         # Return statement
-        return tstart_values, tstop_values, nint_values, tmp_int, tmp_zapchans
+        return tmp_tstart, tmp_tstop, tmp_nint, tmp_int_times, tmp_zapchans
     else:
         return tstart_values, tstop_values, nint_values, int_times_values, mask_zap_chans_per_int_values
 
@@ -323,13 +324,11 @@ def __MPI_MAIN__(parser):
             # Receive Data from child processors after execution.
             comm.Barrier()
 
-        '''
         # Collate data from multiple temporary .npz files into a single .npz file or a filterbank file.
         if hotpotato['write_format']=='npz':
             collate_npz_to_npz(hdr, hotpotato, parent_logger, remove_npz=True)
         elif  hotpotato['write_format']=='fil' or hotpotato['write_format']=='filterbank':
             collate_npz_to_fil(hdr, hotpotato, parent_logger, remove_npz=True)
-        '''
 
         # Calculate total run time for the code.
         prog_end_time = time.time()
