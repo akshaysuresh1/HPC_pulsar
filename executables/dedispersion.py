@@ -20,6 +20,7 @@ from argparse import ArgumentParser
 ###################################################################################
 # Execute call.
 def myexecute(call, logger, rank):
+    print('RANK %d: %s'% (rank, call))
     status = sp.check_call(call,shell=True)
     if status==0:
         logger.info('RANK %d: Call execution complete.'% (rank))
@@ -47,14 +48,15 @@ def __MPI_MAIN__(parser):
         parent_logger = setup_logger_stdout() # Set logger output of parent processor to stdout().
 
         if nproc>=2:
-            # In case of multiple processors, parent processor distributes calls evenly among child processors.
-            distributed_calls = np.array_split(np.array(calls),nproc-1)
-            # Send data to child processors
+            # In case of multiple processors, the parent processor distributes calls evenly between the child processors and itself.
+            distributed_calls = np.array_split(np.array(calls),nproc)
+            # Send calls to child processors.
             for indx in range(1,nproc):
                 comm.send(distributed_calls[indx-1], dest=indx, tag=indx)
-            comm.Barrier() # Wait for all child processors to receive sent call.
-            # Receive Data from child processors after execution.
-            comm.Barrier()
+            # Run tasks assigned to parent processor.
+            for call in distributed_calls[-1]:
+                myexecute(call, parent_logger, rank)
+            comm.Barrier() # Wait for all processors to complete their respective calls.
         else:
             # In case nproc=1, parent (or lone) processor runs all tasks,
             for call in calls:
@@ -68,14 +70,12 @@ def __MPI_MAIN__(parser):
     else:
         # Recieve data from parent processor.
         call_list = comm.recv(source=0, tag=rank)
-        comm.Barrier()
         print('STARTING RANK: ',rank)
         child_logger = setup_logger_stdout() # Set up separate logger for each child processor.
         for call in call_list:
             myexecute(call, child_logger, rank)
         print('FINISHING RANK: ',rank)
-        comm.Barrier()
-        # Send completed status back to parent processor.
+        comm.Barrier() # Await all processsors to complete respective tasks.
 ##############################################################################
 def usage():
     return """

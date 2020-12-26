@@ -174,7 +174,7 @@ def divide_timechunks(nproc, nblocks, times, nint, int_times, mask_zap_chans_per
     DMcurv_samples = np.round(calc_tDM(freq_low,DM,ref_freq)/t_samp).astype(int) # No. of samples spanning a broadband DM curve
     print('No. of samples spanning a broadband DM curve from %.2f GHz to %.2f GHz = %d'% (ref_freq, freq_low, DMcurv_samples))
     if nproc>1:
-        equal_divide_size = np.round((len(times)-DMcurv_samples)/(nblocks*(nproc-1))).astype(int) # Divide the time axis into nblocks*(nproc -1) chunks.
+        equal_divide_size = np.round((len(times)-DMcurv_samples)/(nblocks*nproc)).astype(int) # Divide the time axis into nblocks*nproc chunks.
     else:
         equal_divide_size =  np.round((len(times)-DMcurv_samples)/nblocks).astype(int) # Divide the time axis into nblocks chunks.
     # Increase chunk size, if required, to make it exactly divisible by the temporal downsampling factor.
@@ -206,14 +206,14 @@ def divide_timechunks(nproc, nblocks, times, nint, int_times, mask_zap_chans_per
         mask_zap_chans_per_int_values.append(mask_zap_chans_per_int[idx1:idx2+1])
     nint_values = np.array(nint_values)
     print('Sectioning of time axis into disjoint chunks is complete.')
-    # Cast arrays to shape (nproc-1, nblocks).
+    # Cast arrays to shape (nproc, nblocks).
     if nproc>1:
         tmp_tstart = []
         tmp_tstop = []
         tmp_nint = []
         tmp_int_times = []
         tmp_zapchans = []
-        for i in range(nproc-1):
+        for i in range(nproc):
             tmp_tstart.append(tstart_values[i*nblocks:(i+1)*nblocks])
             tmp_tstop.append(tstop_values[i*nblocks:(i+1)*nblocks])
             tmp_nint.append(nint_values[i*nblocks:(i+1)*nblocks])
@@ -320,9 +320,10 @@ def __MPI_MAIN__(parser):
             # Send data to child processors.
             for indx in range(1,nproc):
                 comm.send((hotpotato, t_samp, tstart_values[indx-1], tstop_values[indx-1], freqs_GHz, npol, nchans, chan_bw, n_bytes, hdr_size, nint_values[indx-1], int_times_values[indx-1], mask_zap_chans_per_int_values[indx-1], mask_zap_chans), dest=indx, tag=indx)
-            comm.Barrier() # Wait for all child processors to receive sent call.
-            # Receive Data from child processors after execution.
-            comm.Barrier()
+            for nb in range(len(tstart_values[-1])):
+                times_chunk = np.arange(tstart_values[-1][nb], tstop_values[-1][nb])*t_samp
+                myexecute(hotpotato, times_chunk, tstart_values[-1][nb], tstop_values[-1][nb], freqs_GHz, npol, nchans, chan_bw, n_bytes, hdr_size, nint_values[-1][nb], int_times_values[-1][nb], mask_zap_chans_per_int_values[-1][nb], mask_zap_chans, parent_logger, rank)
+            comm.Barrier() # Wait for all child processors to complete respective calls.
 
         # Collate data from multiple temporary .npz files into a single .npz file or a filterbank file.
         if hotpotato['write_format']=='npz':
@@ -338,15 +339,13 @@ def __MPI_MAIN__(parser):
     else:
         # Recieve data from parent processor.
         hotpotato, t_samp, tstart_dist, tstop_dist, freqs_GHz, npol, nchans, chan_bw, n_bytes, hdr_size, nint_dist, int_times_dist, mask_zap_chans_per_int_dist, mask_zap_chans = comm.recv(source=0, tag=rank)
-        comm.Barrier()
         print('STARTING RANK: ',rank)
         child_logger = setup_logger_stdout() # Set up separate logger for each child processor.
         for nb in range(len(tstart_dist)):
             times_chunk = np.arange(tstart_dist[nb], tstop_dist[nb])*t_samp
             myexecute(hotpotato, times_chunk, tstart_dist[nb], tstop_dist[nb], freqs_GHz, npol, nchans, chan_bw, n_bytes, hdr_size, nint_dist[nb], int_times_dist[nb], mask_zap_chans_per_int_dist[nb], mask_zap_chans, child_logger, rank)
         print('FINISHING RANK: ',rank)
-        comm.Barrier()
-        # Send completed status back to parent processor.
+        comm.Barrier() # Wait for all processors to complete their respective calls.
 #########################################################################
 def usage():
     return """

@@ -97,15 +97,15 @@ def __MPI_MAIN__(parser):
 
         # Generate list of .fft files
         fft_list = sorted(glob.glob(hotpotato['FFT_DIR']+'/'+hotpotato['glob_fft']))
-        if nproc>=2:
+        if nproc>1:
             # Distribute calls evenly among child processors.
-            distributed_fft_list = np.array_split(np.array(fft_list),nproc-1)
+            distributed_fft_list = np.array_split(np.array(fft_list),nproc)
             # Send data to child processors
             for indx in range(1,nproc):
                 comm.send((distributed_fft_list[indx-1], hotpotato), dest=indx, tag=indx)
-            comm.Barrier() # Wait for all child processors to receive sent call.
-            # Receive Data from child processors after execution.
-            comm.Barrier()
+            for fftfile in distributed_fft_list[-1]:
+                accelsearch(fftfile, hotpotato, parent_logger, rank)
+            comm.Barrier() # Await child processors.
         else:
             for fftfile in fft_list:
                 accelsearch(fftfile, hotpotato, parent_logger, rank)
@@ -133,17 +133,20 @@ def __MPI_MAIN__(parser):
 
         create_dir(hotpotato['FOLD_DIR'])
 
-        if nproc>=2:
+        if nproc>1:
             # Distribute candidate numbers and candidate file list evenly among child processors.
             parent_logger.info('Distributing candidate info to child processors for parallelized time-series folding')
-            distributed_candfile_list = np.array_split(np.array(cand_files),nproc-1)
-            distributed_cand_numbers = np.array_split(np.array(cand_numbers),nproc-1)
+            distributed_candfile_list = np.array_split(np.array(cand_files),nproc)
+            distributed_cand_numbers = np.array_split(np.array(cand_numbers),nproc)
             # Send data to child processors.
             for indx in range(1,nproc):
                 comm.send((distributed_candfile_list[indx-1], distributed_cand_numbers[indx-1], hotpotato), dest=indx, tag=indx)
-            comm.Barrier() # Wait for all child processors to receive sent call.
-            # Receive Data from child processors after execution.
-            comm.Barrier()
+            WORKING_DIR = os.getcwd()
+            os.chdir(hotpotato['FOLD_DIR'])
+            for i in range(len(distributed_candfile_list[-1])):
+                timeseries_fold(distributed_candfile_list[-1][i], distributed_cand_numbers[-1][i], hotpotato, parent_logger, rank)
+            os.chdir(WORKING_DIR)
+            comm.Barrier() # Wait for all child processors to complete call execution.
         else:
             WORKING_DIR = os.getcwd()
             os.chdir(hotpotato['FOLD_DIR'])
@@ -159,18 +162,15 @@ def __MPI_MAIN__(parser):
     else:
         # Recieve data from parent processor.
         call_list, hotpotato = comm.recv(source=0, tag=rank)
-        comm.Barrier()
         print('STARTING RANK: ',rank)
         child_logger = setup_logger_stdout() # Set up a separate logger for each child processor.
         for fftfile in call_list:
             accelsearch(fftfile, hotpotato, child_logger, rank)
         print('FINISHING RANK: ',rank)
-        comm.Barrier()
-        # Send completed status back to parent processor.
+        comm.Barrier() # Send completed status back to parent processor.
 
         # Recieve data from parent processor.
         candfile_list, candnum_list, hotpotato = comm.recv(source=0, tag=rank)
-        comm.Barrier()
         print('RESTARTING RANK: ',rank)
         WORKING_DIR = os.getcwd()
         os.chdir(hotpotato['FOLD_DIR'])

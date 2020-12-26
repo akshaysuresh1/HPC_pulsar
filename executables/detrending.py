@@ -139,18 +139,18 @@ def __MPI_MAIN__(parser):
         # Generate list of .dat files
         dat_list = sorted(glob.glob(hotpotato['DAT_DIR']+'/'+hotpotato['glob_dat']))
         create_dir(hotpotato['OUTPUT_DIR'])
-        if nproc>=2:
+        if nproc>1:
             # Distribute calls evenly among child processors.
-            distributed_dat_list = np.array_split(np.array(dat_list),nproc-1)
+            distributed_dat_list = np.array_split(np.array(dat_list),nproc)
             # Send data to child processors
             for indx in range(1,nproc):
                 comm.send((distributed_dat_list[indx-1], hotpotato), dest=indx, tag=indx)
-            comm.Barrier() # Wait for all child processors to receive sent call.
-            # Receive Data from child processors after execution.
-            comm.Barrier()
+            for datfile in distributed_dat_list[-1]:
+                myexecute(datfile, hotpotato, parent_logger, rank)
+            comm.Barrier() # Wait for all child processors to complete call execution.
         else:
             for datfile in dat_list:
-                myexecute(datfile, hotpotato, parent_logger, rank)    
+                myexecute(datfile, hotpotato, parent_logger, rank)
 
         # Calculate total run time for the code.
         prog_end_time = time.time()
@@ -161,13 +161,11 @@ def __MPI_MAIN__(parser):
         # Recieve data from parent processor.
         call_list, hotpotato = comm.recv(source=0, tag=rank)
         child_logger = setup_logger_stdout()
-        comm.Barrier()
         print('STARTING RANK: ',rank)
         for datfile in call_list:
             myexecute(datfile, hotpotato, child_logger, rank)
         print('FINISHING RANK: ',rank)
-        comm.Barrier()
-        # Send completed status back to parent processor.
+        comm.Barrier() # Send completed status back to parent processor.
 ##############################################################################
 def usage():
     return """
