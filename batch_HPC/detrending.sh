@@ -6,16 +6,13 @@
 #SBATCH -A phy200034p
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=akshay2
-#SBATCH --output=/pylon5/phy200034p/akshay2/Test_logs/detrending_slurm_%j.log
+#SBATCH --output=/ocean/projects/phy200034p/akshay2/Slurm_logs/detrending_slurm_%j.log
 
 # Ensure that the output directory to SBATCH exists prior to batch script execution.
 
-# Define environment variables. $SCRATCH = /pylon5/<group id>/<username>
-SINGULARITY_CONT=$SCRATCH/psrsearch.sif
-CMDDIR=$SCRATCH/HPC_pulsar/cmd_files
-
-# Load required modules.
-module load singularity
+# Define environment variables. $PROJECT = /ocean/projects/<group id>/<username>
+SINGULARITY_CONT=$PROJECT/psrsearch.sif
+CMDDIR=$PROJECT/HPC_pulsar/cmd_files
 
 # Run dedispersion module within singularity container.
 singularity exec -B /local $SINGULARITY_CONT $CMDDIR/detrending.cmd

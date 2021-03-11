@@ -55,10 +55,6 @@ def myexecute(hotpotato, times_chunk, tstart, tstop, freqs_GHz, npol, nchans, ch
         hotpotato['median_bp'][indices_zero_bp] = replace_value
         data[indices_zero_bp] = replace_value
     data = correct_bandpass(data, hotpotato['median_bp'])
-    # Remove zerodm signal.
-    if hotpotato['remove_zerodm']:
-        data = remove_additive_time_noise(data)[0]
-        logger.info('RANK %d: Zerodm removal completed.'% (rank))
     # Apply rfifind mask on data.
     boolean_rfimask = np.zeros(data.shape,dtype=bool)
     for i in range(nint_chunk):
@@ -73,6 +69,10 @@ def myexecute(hotpotato, times_chunk, tstart, tstop, freqs_GHz, npol, nchans, ch
     # Replaced masked entries with mean value.
     logger.info('RANK %d: Replacing masked entries with mean values'% (rank))
     data = np.ma.filled(data, fill_value=np.nanmean(data))
+    # Remove zerodm signal.
+    if hotpotato['remove_zerodm']:
+        data = remove_additive_time_noise(data)[0]
+        logger.info('RANK %d: Zerodm removal completed.'% (rank))
     # Dedisperse the data, if DM is non-zero.
     if hotpotato['DM']!=0:
         logger.info('RANK %d: Dedispersing data using DM = %.1f pc/cc'% (rank, hotpotato['DM']))
