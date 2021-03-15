@@ -32,7 +32,7 @@ def run_spsearch(inputs_cfg):
         spsearch_cmd = 'single_pulse_search.py -t %.1f -g %s'% (hotpotato['threshold'], hotpotato['dat_files'])
     else:
         spsearch_cmd = 'single_pulse_search.py %s -t %.1f -g %s'% (hotpotato['other_params'], hotpotato['threshold'], hotpotato['dat_files'])
-    # Execute single pulse search command.    
+    # Execute single pulse search command.
     status = sp.check_call(spsearch_cmd, shell=True)
     if status==0:
         logger.info('Single pulse searching completed successfully.')
