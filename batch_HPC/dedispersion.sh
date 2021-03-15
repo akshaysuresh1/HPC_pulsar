@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -p RM-shared
-#SBATCH -t 05:00:00
+#SBATCH -t 03:00:00
 #SBATCH -N 1
 #SBATCH --ntasks-per-node 11
 #SBATCH -A phy200034p
