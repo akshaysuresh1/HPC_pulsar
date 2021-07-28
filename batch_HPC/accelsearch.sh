@@ -1,8 +1,8 @@
 #!/bin/bash
-#SBATCH -p RM-small
-#SBATCH -t 00:10:00
+#SBATCH -p RM-shared
+#SBATCH -t 28:00:00
 #SBATCH -N 1
-#SBATCH --ntasks-per-node 4
+#SBATCH --ntasks-per-node 9
 #SBATCH -A phy200034p
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=akshay2

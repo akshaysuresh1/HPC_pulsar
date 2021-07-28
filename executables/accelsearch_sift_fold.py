@@ -20,7 +20,7 @@ from argparse import ArgumentParser
 ##############################################################################
 # Accelsearch call.
 def accelsearch(fftfile, hotpotato, logger, rank):
-    accelsearch_cmd = 'accelsearch -zmax %d -wmax %d %s %s'% (hotpotato['zmax'], hotpotato['wmax'], hotpotato['accel_params'], fftfile)
+    accelsearch_cmd = 'accelsearch -numharm %d -zmax %d -wmax %d %s %s'% (hotpotato['numharm'], hotpotato['zmax'], hotpotato['wmax'], hotpotato['accel_params'], fftfile)
     logger.info('RANK %d: '% (rank) + accelsearch_cmd)
     status = sp.check_call(accelsearch_cmd, shell=True)
     if status==0:
@@ -47,6 +47,8 @@ def set_defaults(hotpotato):
         hotpotato['zmax'] = 0
     if hotpotato['wmax']=='':
         hotpotato['wmax'] = 0
+    if hotpotato['numharm']=='':
+        hotpotato['numharm'] = 8
     if hotpotato['min_num_DMs']=='':
         hotpotato['min_num_DMs'] = 2
     if hotpotato['low_DM_cutoff']=='':
@@ -93,7 +95,7 @@ def __MPI_MAIN__(parser):
         # PRESTO requries wmax to be a multiple of 20.
         hotpotato['wmax'] = int(20*np.ceil(hotpotato['wmax']/20))
         # Update FOLD_DIR to reflect above zmax and wmax values.
-        hotpotato['FOLD_DIR'] = hotpotato['FOLD_DIR']+'/zmax%d_wmax%d'% (hotpotato['zmax'], hotpotato['wmax'])
+        hotpotato['FOLD_DIR'] = hotpotato['FOLD_DIR']+'/zmax%d_wmax%d_numharm%d'% (hotpotato['zmax'], hotpotato['wmax'], hotpotato['numharm'])
 
         # Generate list of .fft files
         fft_list = sorted(glob.glob(hotpotato['FFT_DIR']+'/'+hotpotato['glob_fft']))
