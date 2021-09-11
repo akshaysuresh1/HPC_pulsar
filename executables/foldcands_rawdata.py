@@ -49,7 +49,7 @@ def fold_rawcands(inputs_cfg):
     N_cands = len(candfiles)
     logger.info('No. of candidates to fold on raw data = %d'% (N_cands))
     for i in range(N_cands):
-        select_DM = float(candfiles[i].split('_DM')[1].split('_ACCEL')[0])
+        select_DM = float(candfiles[i].split('_DM')[1].split('_')[0])
         select_num = int(candfiles[i].split('Cand_')[1].split('.')[0])
         select_index = np.where(np.logical_and(cands_DM==select_DM, cands_num==select_num))[0][0]
 
