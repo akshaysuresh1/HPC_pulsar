@@ -3,10 +3,10 @@
 #SBATCH -t 04:00:00
 #SBATCH -N 1
 #SBATCH --ntasks-per-node 30
-#SBATCH -A phy200034p
+#SBATCH -A phy210030p
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=akshay2
-#SBATCH --output=/ocean/projects/phy200034p/akshay2/Slurm_logs/filmask_slurm_%j.log
+#SBATCH --output=/ocean/projects/phy210030p/akshay2/Slurm_logs/filmask_slurm_%j.log
 
 # 42.67 GB memory per core for Bridges-LM partition.
 # Ensure that the output directory to SBATCH exists prior to batch script execution.

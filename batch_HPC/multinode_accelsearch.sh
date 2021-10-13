@@ -3,10 +3,10 @@
 #SBATCH -t 47:30:00
 #SBATCH -N 3
 #SBATCH --ntasks-per-node 128
-#SBATCH -A phy200034p
+#SBATCH -A phy210030p
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=akshay2
-#SBATCH --output=/ocean/projects/phy200034p/akshay2/Slurm_logs/multi_acceljerk_%j.log
+#SBATCH --output=/ocean/projects/phy210030p/akshay2/Slurm_logs/multi_acceljerk_%j.log
 
 # Ensure that the output directory to SBATCH exists prior to batch script execution.
 module load openmpi/3.1.6-gcc8.3.1

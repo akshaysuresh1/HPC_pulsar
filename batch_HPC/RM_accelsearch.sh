@@ -3,10 +3,10 @@
 #SBATCH -t 32:00:00
 #SBATCH -N 3
 #SBATCH --ntasks-per-node 128
-#SBATCH -A phy200034p
+#SBATCH -A phy210030p
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=akshay2
-#SBATCH --output=/ocean/projects/phy200034p/akshay2/Slurm_logs/RM_accelsearch_slurm_%j.log
+#SBATCH --output=/ocean/projects/phy210030p/akshay2/Slurm_logs/RM_accelsearch_slurm_%j.log
 
 # Ensure that the output directory to SBATCH exists prior to batch script execution.
 
@@ -19,5 +19,5 @@ module load mpi/pgi_openmpi
 
 # Run acceleration searches within singularity container.
 mpirun -n $SLURM_NTASKS singularity exec -B /local $SINGULARITY_CONT \
-	python /ocean/projects/phy200034p/akshay2/HPC_pulsar/executables/accelsearch_sift_fold.py \
-       -i /ocean/projects/phy200034p/akshay2/HPC_pulsar/config/accel.cfg
+	python /ocean/projects/phy210030p/akshay2/HPC_pulsar/executables/accelsearch_sift_fold.py \
+       -i /ocean/projects/phy210030p/akshay2/HPC_pulsar/config/accel.cfg
