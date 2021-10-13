@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 '''
 This script runs rfifind on one or multiple data sets.
+
+Usage:
+python rfifind.py -i <Configuration script of inputs>
 '''
 from __future__ import print_function
 from __future__ import absolute_import

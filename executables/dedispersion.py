@@ -3,7 +3,7 @@
 Supply outputs from DDplan.py to run multiple prepsubband calls in parallel.
 
 Run using following syntax.
-nice -<nice value> mpiexec -n <numproc> python -m mpi4py dedispersion.py
+nice -<nice value> mpiexec -n <numproc> python -m mpi4py dedispersion.py -i <Configuration script of inputs>
 '''
 from __future__ import print_function
 from __future__ import absolute_import
