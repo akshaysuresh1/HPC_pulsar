@@ -3,10 +3,16 @@ Pipeline with scripts for running pulsar search software (PRESTO and custom Pyth
 
 ## Dependencies
 ```HPC_pulsar``` is written in Python 3, tested on Python 3.7.4 and has the following package dependencies.
-- <a href="https://github.com/akshaysuresh1/psrdynspec">psrdynspec</a>
-- <a href="https://github.com/scottransom/presto">PRESTO</a>
+- <a href="https://github.com/akshaysuresh1/psrdynspec">```psrdynspec```</a>
+- <a href="https://github.com/scottransom/presto">```PRESTO```</a>
 
 The above packages have several underlying dependencies that are listed in their respective repositories.
+
+Note: To avoid the hassle of installing ```PRESTO``` with its several dependencies, you can pull a Singularity container encasing a full ```PRESTO``` installation <a href="https://singularity-hub.org/collections/4510">here </a>.
+
+To make your life even simpler, <a href="https://singularity-hub.org/collections/4541">here</a> is another Singularity container with both ```PRESTO``` and ```psrdynspec``` installed. 
+
+Batch scripts found the ```batch_HPC``` directory provide examples of calling commands from within a singularity container.
 
 ## Organization
 1. ```batch_HPC```: Batch scripts for non-interactive execution via Slurm.
@@ -23,7 +29,7 @@ The above packages have several underlying dependencies that are listed in their
 Say that you want to dedisperse some data using MPI-enabled ```prepsubband``` of PRESTO.
 1. Edit inputs in the configuration script ```config/dedisp.cfg```.
 2. Verify that the paths to the relavant executable file and config script are correctly provided in the Shell script ```cmd_files/dedispersion.cmd```.
-3. Supply appropriate paramters to Slurm in ```batch_HPC/dedispersion.sh```.
+3. Supply appropriate parameters to Slurm in ```batch_HPC/dedispersion.sh```.
 4. Type ```sbatch batch_HPC/dedispersion.sh``` and hit Enter.
 
 ## Troubleshooting
