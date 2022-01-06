@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -p RM
-#SBATCH -t 47:30:00
-#SBATCH -N 3
+#SBATCH -t 48:00:00
+#SBATCH -N 6
 #SBATCH --ntasks-per-node 128
 #SBATCH -A phy210030p
 #SBATCH --mail-type=BEGIN,END,FAIL
