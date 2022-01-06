@@ -8,11 +8,11 @@ Pipeline with scripts for running pulsar search software (PRESTO and custom Pyth
 
 The above packages have several underlying dependencies that are listed in their respective repositories.
 
-Note: To avoid the hassle of installing ```PRESTO``` with its several dependencies, you can pull a Singularity container encasing a full ```PRESTO``` installation <a href="https://singularity-hub.org/collections/4510">here </a>.
+Note: To avoid the hassle of installing ```PRESTO``` and its several dependencies, you can pull a Singularity container encasing a full ```PRESTO``` installation <a href="https://singularity-hub.org/collections/4510">here </a>.
 
 To make your life even simpler, <a href="https://singularity-hub.org/collections/4541">here</a> is another Singularity container with both ```PRESTO``` and ```psrdynspec``` installed. 
 
-Batch scripts found the ```batch_HPC``` directory provide examples of calling commands from within a singularity container.
+Batch scripts found the ```batch_HPC``` directory provide example command line calls run within a singularity container.
 
 ## Organization
 1. ```batch_HPC```: Batch scripts for non-interactive execution via Slurm.
@@ -26,7 +26,7 @@ Batch scripts found the ```batch_HPC``` directory provide examples of calling co
 3. Pass relevant batch script to Slurm. You can now wait and relax while your code execution progresses non-interactively.
 
 ## Example
-Say that you want to dedisperse some data using MPI-enabled ```prepsubband``` of PRESTO.
+Say that you want to dedisperse some data using MPI-enabled ```prepsubband``` of <a href="https://github.com/scottransom/presto">```PRESTO```</a>.
 1. Edit inputs in the configuration script ```config/dedisp.cfg```.
 2. Verify that the paths to the relavant executable file and config script are correctly provided in the Shell script ```cmd_files/dedispersion.cmd```.
 3. Supply appropriate parameters to Slurm in ```batch_HPC/dedispersion.sh```.
