@@ -69,13 +69,19 @@ def __MPI_MAIN__(parser):
 
         # Generate list of basenames from .fft files.
         basename_fft_list = [x.split('/')[-1].split('.fft')[0] for x in sorted(glob.glob(hotpotato['FFT_DIR']+'/'+hotpotato['glob_fft']))]
+        parent_logger.info('Total no. of .fft files = %d' % (len(basename_fft_list)))
         # Generate list of basename from ACCEL files.
         basename_accel_list = [x.split('/')[-1].split('_'+accel_suffix)[0] for x in sorted(glob.glob(hotpotato['FFT_DIR']+'/*'+accel_suffix))]
+        parent_logger.info('Total no. of accel files = %d'% (len(basename_accel_list)))
         # Find basenames for which accelsearch was left unfinished.
         unfinished_accel_list = [x for x in basename_fft_list if x not in basename_accel_list]
+        parent_logger.info('No. of .fft files to run accelsearch upon = %d'% (len(unfinished_accel_list)))
+        if len(unfinished_accel_list)==0:
+            parent_logger.info('No incomplete accelsearch files. Terminating program execution')
+            sys.exit(0)
+
         # Construct list of .fft files for accelsearch runs.
         fft_list = [hotpotato['FFT_DIR']+'/' + x + '.fft' for x in unfinished_accel_list]
-
         if nproc>1:
             # Distribute calls evenly among child processors.
             distributed_fft_list = np.array_split(np.array(fft_list),nproc)
