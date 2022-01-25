@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 '''
-Say that an accelsearch runs gets interrupted for some reason. Use this script to restart accelsearch, while avoiding redundant processing.
+Say that a multi-node accelsearch run gets interrupted for some reason. Use this script to restart accelsearch, while avoiding redundant processing.
 
 Run using following syntax.
 nice -<nice value> mpiexec -n <numproc> python -m mpi4py finish_accel.py -i INPUTS_CFG
@@ -114,7 +114,7 @@ def usage():
     return """
 usage: nice -(nice value) mpiexec -n (nproc) python -m mpi4py finish_accel.py [-h] -i INPUTS_CFG
 
-Say that an accelsearch runs gets interrupted for some reason. Use this script to restart accelsearch, while avoiding redundant processing.
+Say that a multi-node accelsearch run gets interrupted for some reason. Use this script to restart accelsearch, while avoiding redundant processing.
 
 Argmunents in parenthesis are required numbers for an MPI run.
 
@@ -127,7 +127,7 @@ optional arguments:
 ##############################################################################
 def main():
     """ Command line tool for detrending dedispersed time-series"""
-    parser = ArgumentParser(description="Say that an accelsearch runs gets interrupted for some reason. Use this script to restart accelsearch, while avoiding redundant processing.",usage=usage(),add_help=False)
+    parser = ArgumentParser(description="Say that a multi-node accelsearch run gets interrupted for some reason. Use this script to restart accelsearch, while avoiding redundant processing.",usage=usage(),add_help=False)
     optional = parser._action_groups.pop()
     required = parser.add_argument_group('required arguments')
     required.add_argument('-i', action='store', required=True, dest='inputs_cfg', type=str,
