@@ -6,7 +6,7 @@
 #SBATCH -A phy210030p
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=akshay2
-#SBATCH --output=/ocean/projects/phy210030p/akshay2/Slurm_logs/siftfold_slurm_%j.log
+#SBATCH --output=/ocean/projects/phy210030p/akshay2/Slurm_logs/finishaccel_slurm_%j.log
 
 # Ensure that the output directory to SBATCH exists prior to batch script execution.
 
@@ -15,4 +15,4 @@ SINGULARITY_CONT=$PROJECT/psrsearch.sif
 CMDDIR=$PROJECT/HPC_pulsar/cmd_files
 
 # Run acceleration searches within singularity container.
-singularity exec -B /local $SINGULARITY_CONT $CMDDIR/sift_fold.cmd
+singularity exec -B /local $SINGULARITY_CONT $CMDDIR/finish_accel.cmd

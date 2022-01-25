@@ -87,11 +87,11 @@ def __MPI_MAIN__(parser):
         if 'JERK_' in accelsearch_cand_list[0]:
             zmax = int(accelsearch_cand_list[0].split('ACCEL_')[1].split('_JERK')[0])
             wmax = int(accelsearch_cand_list[0].split('JERK_')[1])
+            accel_suffix = 'ACCEL_%d_JERK_%d' (zmax, wmax)
         else:
             zmax = int(hotpotato['glob_accel'].split('ACCEL_')[1])
             wmax = 0
-        # Suffix for accelsearch files
-        accel_suffix = 'ACCEL_%d_JERK_%d' (zmax, wmax)
+            accel_suffix = 'ACCEL_%d'% (zmax)
 
         # Update FOLD_DIR to reflect above zmax and wmax values.
         hotpotato['FOLD_DIR'] = hotpotato['FOLD_DIR']+'/zmax%d_wmax%d_numharm%d'% (zmax, wmax, hotpotato['numharm'])
@@ -154,7 +154,7 @@ def __MPI_MAIN__(parser):
 ##############################################################################
 def usage():
     return """
-usage: nice -(nice value) mpiexec -n (nproc) python -m mpi4py accelsearch_sift_fold.py [-h] -i INPUTS_CFG
+usage: nice -(nice value) mpiexec -n (nproc) python -m mpi4py sift_fold.py [-h] -i INPUTS_CFG
 
 Sift through accelsearch candidates, and run prepfold on dedispersed time series.
 
