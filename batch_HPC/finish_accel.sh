@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH -p RM
-#SBATCH -t 20:00:00
+#SBATCH -t 24:00:00
 #SBATCH -N 1
-#SBATCH --ntasks-per-node 47
+#SBATCH --ntasks-per-node 35
 #SBATCH -A phy210030p
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=akshay2

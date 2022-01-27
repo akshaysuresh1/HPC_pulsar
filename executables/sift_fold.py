@@ -87,7 +87,7 @@ def __MPI_MAIN__(parser):
         if 'JERK_' in accelsearch_cand_list[0]:
             zmax = int(accelsearch_cand_list[0].split('ACCEL_')[1].split('_JERK')[0])
             wmax = int(accelsearch_cand_list[0].split('JERK_')[1])
-            accel_suffix = 'ACCEL_%d_JERK_%d' (zmax, wmax)
+            accel_suffix = 'ACCEL_%d_JERK_%d'% (zmax, wmax)
         else:
             zmax = int(hotpotato['glob_accel'].split('ACCEL_')[1])
             wmax = 0
@@ -141,6 +141,7 @@ def __MPI_MAIN__(parser):
         parent_logger.info('Code run time = %.5f minutes'% (run_time))
         print('FINISHING RANK: 0')
     else:
+        child_logger = setup_logger_stdout() # Set logger output of child processor. 
         # Recieve data from parent processor.
         candfile_list, candnum_list, hotpotato = comm.recv(source=0, tag=rank)
         print('STARTING RANK: ',rank)

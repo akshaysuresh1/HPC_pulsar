@@ -2,7 +2,7 @@
 #SBATCH -p RM-shared
 #SBATCH -t 20:00:00
 #SBATCH -N 1
-#SBATCH --ntasks-per-node 6
+#SBATCH --ntasks-per-node 20
 #SBATCH -A phy210030p
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=akshay2
