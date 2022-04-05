@@ -5,7 +5,9 @@ This scripts performs the following tasks.
 2. Computes (if required) and removes bandpass.
 3. Reads in a rfifind mask and applies it on the raw data.
 4. Removes DM = 0 pc/cc signal (if specified).
-5. Downsamples (or smooths) data along frequency and time.
+5. Dedisperses data to user-specified DM.
+6. Downsamples (or smooths) data along frequency and time.
+7. Writes data to disk in either .npz or .fil file formats.
 
 Run using following syntax.
 nice -(nice value) mpiexec -n (nproc) python -m mpi4py mask_ds_fil.py [-h] -i INPUTS_CFG
