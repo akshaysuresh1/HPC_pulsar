@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -p RM
-#SBATCH -t 24:00:00
+#SBATCH -t 10:00:00
 #SBATCH -N 1
 #SBATCH --ntasks-per-node 35
 #SBATCH -A phy210030p
