@@ -48,10 +48,10 @@ def rednoise(dat_file, startwidth, endwidth, endfreq, OUTPUT_DIR, logger, rank):
         red_basename = dat_basename.split('/')[-1].split('_DM')[0]+'_red_DM'+ DM_tag # Excludes path
     else:
         red_basename = dat_basename.split('_DM')[0] + '_red_DM' + DM_tag
-    mv_inf_cmd = 'mv %s.inf %s/%s.inf'% (dat_basename + '_red', OUTPUT_DIR, red_basename)
-    status = sp.check_call(mv_inf_cmd, shell=True)
-    mv_redfft_cmd = 'mv %s.fft %s/%s.fft'% (dat_basename + '_red', OUTPUT_DIR, red_basename)
-    status = sp.check_call(mv_redfft_cmd, shell=True)
+    cp_inf_cmd = 'cp %s.inf %s/%s.inf'% (dat_basename, OUTPUT_DIR, red_basename)
+    status = sp.check_call(cp_inf_cmd, shell=True)
+    cp_redfft_cmd = 'cp %s.fft %s/%s.fft'% (dat_basename + '_red', OUTPUT_DIR, red_basename)
+    status = sp.check_call(cp_redfft_cmd, shell=True)
     # Take inverse FFT of dereddened power spectrum to obtain detrended timeseries.
     realinvfft_cmd = 'realfft %s/%s.fft'% (OUTPUT_DIR, red_basename)
     status = sp.check_call(realinvfft_cmd, shell=True)
