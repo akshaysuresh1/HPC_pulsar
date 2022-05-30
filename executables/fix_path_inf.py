@@ -23,7 +23,7 @@ def myexecute(inf_file, hotpotato, logger, rank):
     metadata = infodata(inf_file)
     if '/' in metadata.basenm:
         base = metadata.basenm.split('/')[-1]
-        metadata.basenm = hotpotato['INF_DIR'] + '/' + base
+        metadata.basenm = hotpotato['new_path'] + '/' + base
         metadata.to_file(inf_file)
         logger.info('RANK %d: Path fixed for %s.'% (rank, inf_file))
 
