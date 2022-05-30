@@ -46,7 +46,7 @@ def __MPI_MAIN__(parser):
         hotpotato = read_config(inputs_cfg)
         parent_logger = setup_logger_stdout() # Set logger output of parent processor to stdout().
 
-        logger.info('Building list of .inf files')
+        parent_logger.info('Building list of .inf files')
         inf_file_list = sorted(glob.glob(hotpotato['INF_DIR']+'/'+hotpotato['glob_inf']))
 
         if nproc>=2:
