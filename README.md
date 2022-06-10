@@ -8,9 +8,15 @@ Pipeline with scripts for running pulsar search software (PRESTO and custom Pyth
 
 The above packages have several underlying dependencies that are listed in their respective repositories.
 
-Note: To avoid the hassle of installing ```PRESTO``` and its several dependencies, you can pull a Singularity container encasing a full ```PRESTO``` installation <a href="https://singularity-hub.org/collections/4510">here </a>.
+Note: To avoid the hassle of installing ```PRESTO``` and its several dependencies, you can pull a Singularity container encasing a full ```PRESTO``` installation <a href="https://singularity-hub.org/collections/4510">here </a> via the following command line call.
+```
+singularity pull shub://federatedcloud/singularity-PRESTO
+```
 
-To make your life even simpler, <a href="https://singularity-hub.org/collections/4541">here</a> is another Singularity container with both ```PRESTO``` and ```psrdynspec``` installed. 
+Alternately, for a Singularity container with both ```PRESTO``` and ```[psrdynspec](https://github.com/akshaysuresh1/psrdynspec)``` installed, run the below command line code.
+```
+singularity pull shub://federatedcloud/ pulsar-pipeline-container
+```
 
 Batch scripts found the ```batch_HPC``` directory provide example command line calls run within a singularity container.
 

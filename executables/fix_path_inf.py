@@ -12,7 +12,7 @@ from modules.read_config import read_config
 from modules.general_utils import setup_logger_stdout
 # Standard imports
 from mpi4py import MPI
-from presto.infodata import infodata
+from modules.infodata import infodata
 import os, logging, time, sys, glob
 import numpy as np
 import subprocess as sp
@@ -48,6 +48,7 @@ def __MPI_MAIN__(parser):
 
         parent_logger.info('Building list of .inf files')
         inf_file_list = sorted(glob.glob(hotpotato['INF_DIR']+'/'+hotpotato['glob_inf']))
+        parent_logger.info('No. of .inf files = %d'% (len(inf_file_list)))
 
         if nproc>=2:
             # Split .inf files equally across all processors.
